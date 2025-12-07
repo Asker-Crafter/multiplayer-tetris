@@ -22,8 +22,8 @@ export const NextTetromino: React.FC<NextTetrominoProps> = ({ tetromino }) => {
 
   return (
     <div className={styles.previewBox}>
-      {shape.map((row, y) =>
-        row.map((cell, x) =>
+      {shape.map((row: number[], y: number) =>
+        row.map((cell: number, x: number) =>
           cell ? (
             <div
               key={`${y}-${x}`}

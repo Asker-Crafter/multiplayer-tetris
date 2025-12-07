@@ -16,8 +16,8 @@ export const Glass: React.FC<GlassProps> = ({ board = DEFAULT_BOARD }) => {
 
   return (
     <div className={styles.glassGrid} style={{ gridTemplateColumns: `repeat(${displayBoard[0]?.length || 10}, 25px)` }}>
-      {displayBoard.map((row, y) =>
-        row.map((cell, x) => (
+      {displayBoard.map((row: number[], y: number) =>
+        row.map((cell: number, x: number) => (
           <div
             key={`${y}-${x}`}
             className={styles.cell}
