@@ -20,12 +20,15 @@ game-app/
 │   │   └── Results/
 │   ├── context/
 │   │   ├── GameContext.tsx
-│   │   └── PlayersContext.tsx
+│   │   ├── PlayersContext.tsx
+│   │   ├── GameProvider.tsx
+│   │   └── PlayersProvider.tsx
 │   ├── engine/
 │   │   ├── tetrominos.ts
 │   │   ├── collision.ts
 │   │   ├── rotation.ts
-│   │   └── scoring.ts
+│   │   ├── scoring.ts
+│   │   └── tetrominos.test.ts
 │   ├── multiplayer/
 │   │   ├── attackSystem.ts
 │   │   └── targetSelection.ts
@@ -35,8 +38,8 @@ game-app/
 │   ├── App.test.tsx
 │   ├── App.css
 │   ├── index.css
-│   └── main.tsx
-├── .gitignore
+│   ├── main.tsx
+│   └── setupTests.ts
 ├── eslint.config.js
 ├── index.html
 ├── jest.config.ts
@@ -47,15 +50,18 @@ game-app/
 ### второй - ui-kit - библиотека UI-компонентов
 ```
 ui-kit/
+├── public/
+│   └── vite.svg
 ├── src/
 │   ├── Button/
 │   ├── Modal/
 │   ├── PlayerCard/
 │   ├── Grid/
 │   ├── Scoreboard/
+│   ├── Glass/
+│   ├── NextTetromino/
 │   └── index.ts
 ├── package.json
-├── .gitignore
 ├── eslint.config.js
 ├── jest.config.ts
 ├── vite.config.ts
