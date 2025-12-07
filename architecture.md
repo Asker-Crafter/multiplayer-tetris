@@ -60,6 +60,9 @@ ui-kit/
 │   ├── Scoreboard/
 │   ├── Glass/
 │   ├── NextTetromino/
+│   ├── global.d.ts
+│   ├── setupTests.ts
+│   ├── types.ts
 │   └── index.ts
 ├── package.json
 ├── eslint.config.js
