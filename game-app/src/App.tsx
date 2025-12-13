@@ -10,16 +10,16 @@ import './App.css'
 function App() {
   return (
     <BrowserRouter>
-      <GameProvider>
-        <PlayersProvider>
+      <PlayersProvider>
+        <GameProvider>
           <Routes>
             <Route path="/" element={<Navigate to="/lobby" replace />} />
             <Route path="/lobby" element={<Lobby />} />
             <Route path="/game" element={<GameRoom />} />
             <Route path="/results" element={<Results />} />
           </Routes>
-        </PlayersProvider>
-      </GameProvider>
+        </GameProvider>
+      </PlayersProvider>
     </BrowserRouter>
   )
 }

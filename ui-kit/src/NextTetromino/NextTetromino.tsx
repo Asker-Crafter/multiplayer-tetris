@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 
 import styles from './NextTetromino.module.css'
 
@@ -8,7 +8,7 @@ export interface NextTetrominoProps {
   tetromino: Tetromino | null;
 }
 
-export const NextTetromino: React.FC<NextTetrominoProps> = ({ tetromino }) => {
+export const NextTetromino: React.FC<NextTetrominoProps> = memo(({ tetromino }) => {
   if (!tetromino) {
     return <div className={styles.previewBox} data-testid="empty-preview" />
   }
@@ -40,4 +40,4 @@ export const NextTetromino: React.FC<NextTetrominoProps> = ({ tetromino }) => {
       )}
     </div>
   )
-}
+})

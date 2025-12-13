@@ -5,7 +5,7 @@ import App from './App'
 describe('App component', () => {
   it('renders the application with routing', () => {
     render(<App />)
-    const lobbyHeading = screen.getByText(/Lobby Page/i)
+    const lobbyHeading = screen.getByText(/Multiplayer Tetris/i)
 
     expect(lobbyHeading).toBeInTheDocument()
   })

@@ -1,31 +1,43 @@
-interface ScoreEntry {
+import React from 'react'
+
+interface PlayerResult {
   name: string
   score: number
+  lines: number
+  level: number
   place: number
 }
 
 interface ScoreboardProps {
-  entries: ScoreEntry[]
+  players: PlayerResult[]
 }
 
-const Scoreboard = ({ entries }: ScoreboardProps) => {
+const Scoreboard = ({ players }: ScoreboardProps) => {
   return (
-    <div className="scoreboard">
-      <h2 className="scoreboard__title">Scoreboard</h2>
-      <table className="scoreboard__table">
+    <div style={{
+      backgroundColor: '#1a1a1a',
+      border: '2px solid #333',
+      borderRadius: '8px',
+      padding: '20px',
+    }}>
+      <table style={{ width: '100%', color: '#fff', borderCollapse: 'collapse' }}>
         <thead>
-          <tr>
-            <th>Place</th>
-            <th>Name</th>
-            <th>Score</th>
+          <tr style={{ borderBottom: '2px solid #333' }}>
+            <th style={{ padding: '10px', textAlign: 'left' }}>Place</th>
+            <th style={{ padding: '10px', textAlign: 'left' }}>Name</th>
+            <th style={{ padding: '10px', textAlign: 'right' }}>Score</th>
+            <th style={{ padding: '10px', textAlign: 'right' }}>Lines</th>
+            <th style={{ padding: '10px', textAlign: 'right' }}>Level</th>
           </tr>
         </thead>
         <tbody>
-          {entries.map((entry) => (
-            <tr key={entry.place}>
-              <td>{entry.place}</td>
-              <td>{entry.name}</td>
-              <td>{entry.score}</td>
+          {players.map((player) => (
+            <tr key={player.place} style={{ borderBottom: '1px solid #333' }}>
+              <td style={{ padding: '10px' }}>{player.place}</td>
+              <td style={{ padding: '10px' }}>{player.name}</td>
+              <td style={{ padding: '10px', textAlign: 'right' }}>{player.score}</td>
+              <td style={{ padding: '10px', textAlign: 'right' }}>{player.lines}</td>
+              <td style={{ padding: '10px', textAlign: 'right' }}>{player.level}</td>
             </tr>
           ))}
         </tbody>

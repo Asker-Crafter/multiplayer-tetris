@@ -1,3 +1,5 @@
+import React from 'react'
+
 interface GridProps {
   children: React.ReactNode
   columns?: number
