@@ -1,0 +1,20 @@
+.button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  font-family: 'Comic Sans MS';
+}
+
+.primary {
+  background-color: #fe8605ff;
+  color: #fff;
+}
+
+.secondary {
+  background-color: #ffedc1ff;
+  color: #ffffffff;
+}

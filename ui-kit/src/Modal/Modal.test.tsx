@@ -49,7 +49,7 @@ describe('Modal', () => {
         <div>Modal Content</div>
       </Modal>
     )
-    // Click on the backdrop (first div)
+    // Клик на фон (первый div)
     const backdrop = container.firstChild as HTMLElement
 
     fireEvent.click(backdrop)

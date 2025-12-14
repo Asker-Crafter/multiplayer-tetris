@@ -1,5 +1,7 @@
 import React from 'react'
 
+import styles from './Scoreboard.module.css'
+
 interface PlayerResult {
   name: string
   score: number
@@ -14,27 +16,25 @@ interface ScoreboardProps {
 
 const Scoreboard = ({ players }: ScoreboardProps) => {
   return (
-    <div style={{
-      backgroundColor: '#40208bff',
-    }}>
-      <table style={{ width: '100%', color: '#fff', borderCollapse: 'collapse', textAlign: 'center', border: '2px solid #ffffff' }}>
+    <div className={styles.container}>
+      <table className={styles.table}>
         <thead>
-          <tr style={{ borderBottom: '2px solid #ffffff' }}>
-            <th style={{ padding: '10px', border: '2px solid #ffffff' }}>Место</th>
-            <th style={{ padding: '10px', border: '2px solid #ffffff' }}>Счёт</th>
-            <th style={{ padding: '10px', border: '2px solid #ffffff' }}>Уничтожено линий</th>
-            <th style={{ padding: '10px', border: '2px solid #ffffff' }}>Имя</th>
-            <th style={{ padding: '10px', border: '2px solid #ffffff' }}>Уровень</th>
+          <tr className={styles.headerRow}>
+            <th className={styles.headerCell}>Место</th>
+            <th className={styles.headerCell}>Счёт</th>
+            <th className={styles.headerCell}>Уничтожено линий</th>
+            <th className={styles.headerCell}>Имя</th>
+            <th className={styles.headerCell}>Уровень</th>
           </tr>
         </thead>
         <tbody>
           {players.map((player) => (
-            <tr key={player.place} style={{ borderBottom: '1px solid #ffffff' }}>
-              <td style={{ padding: '20px', border: '1px solid #ffffff' }}>{player.place}</td>
-              <td style={{ padding: '20px', border: '1px solid #ffffff' }}>{player.name}</td>
-              <td style={{ padding: '20px', border: '1px solid #ffffff' }}>{player.score}</td>
-              <td style={{ padding: '20px', border: '1px solid #ffffff' }}>{player.lines}</td>
-              <td style={{ padding: '20px', border: '1px solid #ffffff' }}>{player.level}</td>
+            <tr key={player.place} className={styles.bodyRow}>
+              <td className={styles.cell}>{player.place}</td>
+              <td className={styles.cell}>{player.name}</td>
+              <td className={styles.cell}>{player.score}</td>
+              <td className={styles.cell}>{player.lines}</td>
+              <td className={styles.cell}>{player.level}</td>
             </tr>
           ))}
         </tbody>

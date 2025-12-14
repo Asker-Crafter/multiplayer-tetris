@@ -23,7 +23,8 @@ describe('TetrisBoard', () => {
   it('renders board with current piece', () => {
     const piece = {
       shape: [[1, 1], [1, 1]],
-      color: '#ffff00'
+      color: '#ffff00',
+      border: '#cccc00'
     }
     const { container } = render(
       <TetrisBoard board={emptyBoard} currentPiece={piece} currentX={4} currentY={0} />
@@ -35,7 +36,8 @@ describe('TetrisBoard', () => {
   it('renders with current piece at different position', () => {
     const piece = {
       shape: [[1, 0], [1, 1], [0, 1]],
-      color: '#00ff00'
+      color: '#00ff00',
+      border: '#00cc00'
     }
     const { container } = render(
       <TetrisBoard board={emptyBoard} currentPiece={piece} currentX={2} currentY={5} />
@@ -56,7 +58,8 @@ describe('TetrisBoard', () => {
   it('uses default position values', () => {
     const piece = {
       shape: [[1, 1, 1, 1]],
-      color: '#00ffff'
+      color: '#00ffff',
+      border: '#00cccc'
     }
     const { container } = render(<TetrisBoard board={emptyBoard} currentPiece={piece} />)
 

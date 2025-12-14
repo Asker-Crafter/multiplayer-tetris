@@ -14,11 +14,11 @@ describe('Scoreboard', () => {
 
   it('renders table headers correctly', () => {
     render(<Scoreboard players={mockPlayers} />)
-    expect(screen.getByText('Place')).toBeInTheDocument()
-    expect(screen.getByText('Name')).toBeInTheDocument()
-    expect(screen.getByText('Score')).toBeInTheDocument()
-    expect(screen.getByText('Lines')).toBeInTheDocument()
-    expect(screen.getByText('Level')).toBeInTheDocument()
+    expect(screen.getByText('Место')).toBeInTheDocument()
+    expect(screen.getByText('Имя')).toBeInTheDocument()
+    expect(screen.getByText('Счёт')).toBeInTheDocument()
+    expect(screen.getByText('Уничтожено линий')).toBeInTheDocument()
+    expect(screen.getByText('Уровень')).toBeInTheDocument()
   })
 
   it('renders all players', () => {
@@ -46,7 +46,7 @@ describe('Scoreboard', () => {
 
   it('renders empty table when no players', () => {
     render(<Scoreboard players={[]} />)
-    expect(screen.getByText('Place')).toBeInTheDocument()
+    expect(screen.getByText('Место')).toBeInTheDocument()
     expect(screen.queryByText('Player 1')).not.toBeInTheDocument()
   })
 

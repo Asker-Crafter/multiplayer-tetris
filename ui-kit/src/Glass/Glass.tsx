@@ -5,7 +5,6 @@ import styles from './Glass.module.css'
 import type { GameBoard } from '../types'
 
 const COLORS = ['#1a1a1a', '#2d00f7', '#e500a4', '#f20089', '#ffb600', '#6a00f4', '#8900f2', '#bc00dd', '#808080']
-const BORDER_COLORS = ['#fff', '#000', '#000', '#000', '#000', '#000', '#000', '#000', '#808080']
 const DEFAULT_BOARD: GameBoard = Array.from({ length: 20 }, () => Array(10).fill(0))
 
 export interface GlassProps {
@@ -21,7 +20,7 @@ export const Glass: React.FC<GlassProps> = memo(({ board = DEFAULT_BOARD }) => {
         row.map((cell: number, x: number) => (
           <div
             key={`${y}-${x}`}
-            className={styles.cell}
+            className={`${styles.cell} ${cell !== 0 ? styles.cellFilled : ''}`}
             style={{ backgroundColor: COLORS[cell] || COLORS[0] }}
             data-testid="cell"
           />

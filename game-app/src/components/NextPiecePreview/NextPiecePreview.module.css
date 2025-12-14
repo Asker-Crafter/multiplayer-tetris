@@ -1,0 +1,16 @@
+.container {
+  padding: 15px;
+  background-color: #001076ff;
+  border: 1px dashed #ffffff;
+}
+
+.title {
+  margin: 0 0 10px 0;
+  color: #ffffff;
+  text-align: center;
+}
+
+.preview {
+  justify-content: center;
+  display: flex;
+}

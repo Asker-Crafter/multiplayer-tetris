@@ -1,43 +1,43 @@
 import { getPlayerForKey, getActionForKey, PLAYER_KEYMAPS } from './keyboard'
 
 describe('getPlayerForKey', () => {
-  it('returns 0 for player 1 arrow keys', () => {
-    expect(getPlayerForKey('ArrowLeft')).toBe(0)
-    expect(getPlayerForKey('ArrowRight')).toBe(0)
-    expect(getPlayerForKey('ArrowDown')).toBe(0)
-    expect(getPlayerForKey('ArrowUp')).toBe(0)
+  it('returns 0 for player 1 WASD keys', () => {
+    expect(getPlayerForKey('KeyA')).toBe(0)
+    expect(getPlayerForKey('KeyD')).toBe(0)
+    expect(getPlayerForKey('KeyS')).toBe(0)
+    expect(getPlayerForKey('KeyW')).toBe(0)
   })
 
-  it('returns 0 for player 1 space key', () => {
-    expect(getPlayerForKey(' ')).toBe(0)
+  it('returns 0 for player 1 q key', () => {
+    expect(getPlayerForKey('KeyQ')).toBe(0)
   })
 
-  it('returns 0 for player 1 enter key', () => {
-    expect(getPlayerForKey('Enter')).toBe(0)
+  it('returns 0 for player 1 e key', () => {
+    expect(getPlayerForKey('KeyE')).toBe(0)
   })
 
-  it('returns 1 for player 2 WASD keys', () => {
-    expect(getPlayerForKey('a')).toBe(1)
-    expect(getPlayerForKey('d')).toBe(1)
-    expect(getPlayerForKey('s')).toBe(1)
-    expect(getPlayerForKey('w')).toBe(1)
+  it('returns 1 for player 2 IJKL keys', () => {
+    expect(getPlayerForKey('KeyJ')).toBe(1)
+    expect(getPlayerForKey('KeyL')).toBe(1)
+    expect(getPlayerForKey('KeyK')).toBe(1)
+    expect(getPlayerForKey('KeyI')).toBe(1)
   })
 
-  it('returns 1 for player 2 q and e keys', () => {
-    expect(getPlayerForKey('q')).toBe(1)
-    expect(getPlayerForKey('e')).toBe(1)
+  it('returns 1 for player 2 u and o keys', () => {
+    expect(getPlayerForKey('KeyU')).toBe(1)
+    expect(getPlayerForKey('KeyO')).toBe(1)
   })
 
-  it('returns 2 for player 3 IJKL keys', () => {
-    expect(getPlayerForKey('j')).toBe(2)
-    expect(getPlayerForKey('l')).toBe(2)
-    expect(getPlayerForKey('k')).toBe(2)
-    expect(getPlayerForKey('i')).toBe(2)
+  it('returns 2 for player 3 arrow keys', () => {
+    expect(getPlayerForKey('ArrowLeft')).toBe(2)
+    expect(getPlayerForKey('ArrowRight')).toBe(2)
+    expect(getPlayerForKey('ArrowDown')).toBe(2)
+    expect(getPlayerForKey('ArrowUp')).toBe(2)
   })
 
-  it('returns 2 for player 3 u and o keys', () => {
-    expect(getPlayerForKey('u')).toBe(2)
-    expect(getPlayerForKey('o')).toBe(2)
+  it('returns 2 for player 3 space and enter keys', () => {
+    expect(getPlayerForKey('Space')).toBe(2)
+    expect(getPlayerForKey('Enter')).toBe(2)
   })
 
   it('returns null for unmapped keys', () => {
@@ -49,35 +49,35 @@ describe('getPlayerForKey', () => {
 
 describe('getActionForKey', () => {
   it('returns correct action for player 0 keys', () => {
-    expect(getActionForKey(0, 'ArrowLeft')).toBe('left')
-    expect(getActionForKey(0, 'ArrowRight')).toBe('right')
-    expect(getActionForKey(0, 'ArrowDown')).toBe('down')
-    expect(getActionForKey(0, 'ArrowUp')).toBe('rotate')
-    expect(getActionForKey(0, ' ')).toBe('drop')
-    expect(getActionForKey(0, 'Enter')).toBe('changeTarget')
+    expect(getActionForKey(0, 'KeyA')).toBe('left')
+    expect(getActionForKey(0, 'KeyD')).toBe('right')
+    expect(getActionForKey(0, 'KeyS')).toBe('down')
+    expect(getActionForKey(0, 'KeyW')).toBe('rotate')
+    expect(getActionForKey(0, 'KeyQ')).toBe('drop')
+    expect(getActionForKey(0, 'KeyE')).toBe('changeTarget')
   })
 
   it('returns correct action for player 1 keys', () => {
-    expect(getActionForKey(1, 'a')).toBe('left')
-    expect(getActionForKey(1, 'd')).toBe('right')
-    expect(getActionForKey(1, 's')).toBe('down')
-    expect(getActionForKey(1, 'w')).toBe('rotate')
-    expect(getActionForKey(1, 'q')).toBe('drop')
-    expect(getActionForKey(1, 'e')).toBe('changeTarget')
+    expect(getActionForKey(1, 'KeyJ')).toBe('left')
+    expect(getActionForKey(1, 'KeyL')).toBe('right')
+    expect(getActionForKey(1, 'KeyK')).toBe('down')
+    expect(getActionForKey(1, 'KeyI')).toBe('rotate')
+    expect(getActionForKey(1, 'KeyU')).toBe('drop')
+    expect(getActionForKey(1, 'KeyO')).toBe('changeTarget')
   })
 
   it('returns correct action for player 2 keys', () => {
-    expect(getActionForKey(2, 'j')).toBe('left')
-    expect(getActionForKey(2, 'l')).toBe('right')
-    expect(getActionForKey(2, 'k')).toBe('down')
-    expect(getActionForKey(2, 'i')).toBe('rotate')
-    expect(getActionForKey(2, 'u')).toBe('drop')
-    expect(getActionForKey(2, 'o')).toBe('changeTarget')
+    expect(getActionForKey(2, 'ArrowLeft')).toBe('left')
+    expect(getActionForKey(2, 'ArrowRight')).toBe('right')
+    expect(getActionForKey(2, 'ArrowDown')).toBe('down')
+    expect(getActionForKey(2, 'ArrowUp')).toBe('rotate')
+    expect(getActionForKey(2, 'Space')).toBe('drop')
+    expect(getActionForKey(2, 'Enter')).toBe('changeTarget')
   })
 
   it('returns null for wrong key on player', () => {
-    expect(getActionForKey(0, 'a')).toBe(null)
-    expect(getActionForKey(1, 'ArrowLeft')).toBe(null)
+    expect(getActionForKey(0, 'KeyJ')).toBe(null)
+    expect(getActionForKey(1, 'KeyA')).toBe(null)
   })
 
   it('returns null for invalid player id', () => {

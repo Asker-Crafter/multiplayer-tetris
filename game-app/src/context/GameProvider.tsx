@@ -1,4 +1,4 @@
-import { useState, useCallback, useContext, useRef, useEffect } from 'react'
+import { useState, useCallback, useContext, useRef, useEffect, useMemo } from 'react'
 
 import { GameContext } from './GameContext'
 import { PlayersContext } from './PlayersContext'
@@ -7,6 +7,7 @@ import { rotateTetromino } from '../engine/rotation'
 import { clearLines, calculateScore, calculateLevel, calculateGarbageLines } from '../engine/scoring'
 import { getRandomTetromino } from '../engine/tetrominos'
 import { addGarbageLines } from '../multiplayer/attackSystem'
+import { getNextTarget } from '../multiplayer/targetSelection'
 
 import type { PlayerGameState } from './GameContext'
 import type { GameBoard } from '@my-app/ui-kit'
@@ -19,7 +20,7 @@ const createEmptyBoard = (): GameBoard => {
   return Array.from({ length: BOARD_HEIGHT }, () => Array(BOARD_WIDTH).fill(0))
 }
 
-// Load state from localStorage
+// Загрузка состояния из localStorage
 const loadGameState = () => {
   try {
     const saved = localStorage.getItem(STORAGE_KEY)
@@ -28,18 +29,18 @@ const loadGameState = () => {
       return JSON.parse(saved)
     }
   } catch (error) {
-    console.error('Failed to load game state:', error)
+    console.error('Не удалось загрузить состояние игры:', error)
   }
 
   return null
 }
 
-// Save state to localStorage
+// Сохранение состояния в localStorage
 const saveGameState = (gameStates: Record<number, PlayerGameState>, isGameStarted: boolean) => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ gameStates, isGameStarted }))
   } catch (error) {
-    console.error('Failed to save game state:', error)
+    console.error('Не удалось сохранить состояние игры:', error)
   }
 }
 
@@ -49,7 +50,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [gameStates, setGameStates] = useState<Record<number, PlayerGameState>>(initialState?.gameStates || {})
   const [isGameStarted, setIsGameStarted] = useState(initialState?.isGameStarted || false)
 
-  // Queue for storing side effects per player
+  // Очередь для хранения побочных эффектов по каждому игроку
   const lockPieceSideEffectsQueue = useRef<Map<number, {
     attackToSend: { targetId: number; count: number } | null
     statsUpdate: { score: number; lines: number; level: number; attackQueue?: number }
@@ -249,7 +250,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       const newPiece = getRandomTetromino()
       const isGameOver = checkCollision(finalBoard, nextPiece.shape, 3, 0)
 
-      // Queue side effects for this specific player
+      // Добавляем побочные эффекты в очередь для данного игрока
       lockPieceSideEffectsQueue.current.set(playerId, { attackToSend, statsUpdate, isGameOver })
 
       return {
@@ -266,11 +267,11 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     })
   }, [playersContext])
 
-  // Process side effects queue after state updates
+  // Обработка очереди побочных эффектов после обновления состояния
   useEffect(() => {
     if (lockPieceSideEffectsQueue.current.size === 0) return
 
-    // Process all queued side effects
+    // Обрабатываем все побочные эффекты из очереди
     lockPieceSideEffectsQueue.current.forEach((sideEffects, playerId) => {
       if (sideEffects.attackToSend) {
         playersContext?.addAttackToQueue(
@@ -285,11 +286,41 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       }
     })
 
-    // Clear the queue
+    // Очищаем очередь
     lockPieceSideEffectsQueue.current.clear()
   }, [gameStates, playersContext])
 
-  // Auto-save game state to localStorage whenever it changes
+  // Создаем строку состояния игроков для зависимости useEffect
+  const playersStateKey = useMemo(() => {
+    return playersContext?.players.map(p => `${p.id}-${p.isAlive}`).join(',') || ''
+  }, [playersContext?.players])
+
+  // Автоматическое переключение target при выбывании цели
+  useEffect(() => {
+    if (!playersContext || playersContext.playerCount < 3) return
+
+    playersContext.players.forEach(player => {
+      if (!player.isAlive) return
+
+      const targetPlayer = playersContext.players.find(p => p.id === player.attackTarget)
+
+      // Если цель мертва, переключаемся на следующую живую
+      if (!targetPlayer || !targetPlayer.isAlive) {
+        const newTarget = getNextTarget(
+          player.attackTarget,
+          playersContext.players,
+          player.id
+        )
+
+        // Переключаем только если новая цель отличается от текущей
+        if (newTarget !== player.attackTarget) {
+          playersContext.setAttackTarget(player.id, newTarget)
+        }
+      }
+    })
+  }, [playersStateKey, playersContext?.playerCount, playersContext])
+
+  // Автосохранение игрового состояния в localStorage при изменениях
   useEffect(() => {
     if (isGameStarted && Object.keys(gameStates).length > 0) {
       saveGameState(gameStates, isGameStarted)

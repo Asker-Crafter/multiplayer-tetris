@@ -6,7 +6,7 @@ import type { Player } from './PlayersContext'
 
 const STORAGE_KEY = 'tetris_players_state'
 
-// Load state from localStorage
+// Загрузка состояния из localStorage
 const loadState = () => {
   try {
     const saved = localStorage.getItem(STORAGE_KEY)
@@ -15,18 +15,18 @@ const loadState = () => {
       return JSON.parse(saved)
     }
   } catch (error) {
-    console.error('Failed to load players state:', error)
+    console.error('Не удалось загрузить состояние игроков:', error)
   }
 
   return null
 }
 
-// Save state to localStorage
+// Сохранение состояния в localStorage
 const saveState = (players: Player[], playerCount: number) => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ players, playerCount }))
   } catch (error) {
-    console.error('Failed to save players state:', error)
+    console.error('Не удалось сохранить состояние игроков:', error)
   }
 }
 
@@ -42,7 +42,7 @@ export const PlayersProvider = ({ children }: { children: React.ReactNode }) => 
   const initializePlayers = useCallback((playerNames?: string[]) => {
     const newPlayers: Player[] = Array.from({ length: playerCount }, (_, i) => ({
       id: i,
-      name: playerNames?.[i] || `Player ${i + 1}`,
+      name: playerNames?.[i] || `Игрок ${i + 1}`,
       isAlive: true,
       score: 0,
       lines: 0,
@@ -103,7 +103,7 @@ export const PlayersProvider = ({ children }: { children: React.ReactNode }) => 
     localStorage.removeItem(STORAGE_KEY)
   }, [])
 
-  // Auto-save state to localStorage whenever it changes
+  // Автосохранение состояния в localStorage при изменениях
   useEffect(() => {
     if (players.length > 0) {
       saveState(players, playerCount)

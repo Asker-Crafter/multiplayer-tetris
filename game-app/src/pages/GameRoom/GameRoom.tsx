@@ -2,6 +2,7 @@ import { useContext, useEffect, useCallback, useRef, useMemo, useState } from 'r
 
 import { useNavigate } from 'react-router-dom'
 
+import styles from './GameRoom.module.css'
 import AttackQueue from '../../components/AttackQueue'
 import GameOverModal from '../../components/GameOverModal'
 import NextPiecePreview from '../../components/NextPiecePreview'
@@ -10,7 +11,7 @@ import TetrisBoard from '../../components/TetrisBoard'
 import { GameContext } from '../../context/GameContext'
 import { PlayersContext } from '../../context/PlayersContext'
 import { checkCollision } from '../../engine/collision'
-import { getNextTarget } from '../../multiplayer/targetSelection'
+import { getNextTarget, canChangeTarget } from '../../multiplayer/targetSelection'
 import { getPlayerForKey, getActionForKey } from '../../utils/keyboard'
 
 import type { PlayerGameState } from '../../context/GameContext'
@@ -20,7 +21,6 @@ const GameRoom = () => {
   const navigate = useNavigate()
   const gameContext = useContext(GameContext)
   const playersContext = useContext(PlayersContext)
-  const gameOverShownRef = useRef<Set<number>>(new Set())
   const gameStatesRef = useRef<Record<number, PlayerGameState>>({})
   const playersRef = useRef<Player[]>([])
   const [isReady, setIsReady] = useState(false)
@@ -84,8 +84,8 @@ const GameRoom = () => {
     case 'changeTarget':
       if (event.repeat) return
 
-      if (players.length > 2) {
-        const newTarget = getNextTarget(player.attackTarget, players.length, playerId)
+      if (players.length > 2 && canChangeTarget(players, playerId)) {
+        const newTarget = getNextTarget(player.attackTarget, players, playerId)
 
         setAttackTarget(playerId, newTarget)
       }
@@ -108,7 +108,7 @@ const GameRoom = () => {
     playersRef.current = players
   }, [players])
 
-  // Wait for game states to initialize before rendering
+  // Ожидание инициализации игровых состояний перед рендером
   useEffect(() => {
     if (!gameContext || !playersContext) {
       setIsReady(false)
@@ -126,7 +126,7 @@ const GameRoom = () => {
     } else {
       setIsReady(false)
     }
-  }, [gameContext?.isGameStarted, gameContext?.gameStates, playersContext?.players])
+  }, [gameContext, playersContext])
 
   // Создаем стабильный ключ для пересоздания интервалов только когда меняется isAlive или level
   const intervalsKey = useMemo(() => {
@@ -134,7 +134,7 @@ const GameRoom = () => {
       .filter(p => p.isAlive)
       .map(p => `${p.id}-${p.level}`)
       .join(',')
-  }, [players.map(p => `${p.id}-${p.isAlive}-${p.level}`).join(',')])
+  }, [players])
 
   useEffect(() => {
     const intervals = playersRef.current.map(player => {
@@ -177,46 +177,36 @@ const GameRoom = () => {
   }, [players, getWinner, navigate])
 
   if (!gameContext || !playersContext || !isReady) {
-    return <div>Loading...</div>
+    return <div>Загрузка...</div>
   }
 
   return (
     <div>
-      <h2 style={{ textAlign: 'center' }}>МУЛЬТИПЛЕЕРНЫЙ ТЕТРИС</h2>
+      <h2 className={styles.title}>МУЛЬТИПЛЕЕРНЫЙ ТЕТРИС</h2>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: `repeat(${players.length}, 1fr)`,
-        gap: '30px',
-        maxWidth: '1400px',
-        margin: '0 auto',
-      }}>
+      <div
+        className={styles.playersGrid}
+        style={{ gridTemplateColumns: `repeat(${players.length}, 1fr)` }}
+      >
         {players.map(player => {
           const gameState = gameStates[player.id]
 
           if (!gameState) return null
 
-          const showGameOver = gameState.isGameOver && !gameOverShownRef.current.has(player.id)
-
-          if (showGameOver) {
-            gameOverShownRef.current.add(player.id)
-            setTimeout(() => gameOverShownRef.current.delete(player.id), 3000)
-          }
+          // Находим всех выбывших игроков
+          const deadPlayers = players.filter(p => !p.isAlive)
+          const lastDeadPlayer = deadPlayers[deadPlayers.length - 1]
+          const shouldShowModal = gameState.isGameOver &&
+                                   players.filter(p => p.isAlive).length <= 1 &&
+                                   player.id === lastDeadPlayer?.id
+          const deadPlayerNames = deadPlayers.map(p => p.name)
 
           return (
-            <div key={player.id} style={{
-              opacity: player.isAlive ? 1 : 0.5,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}>
-              <div style={{
-                width: '100%',
-                maxWidth: '220px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0px',
-              }}>
+            <div
+              key={player.id}
+              className={`${styles.playerContainer} ${!player.isAlive ? styles.dead : ''}`}
+            >
+              <div className={styles.playerComponents}>
                 <ScorePanel
                   score={player.score}
                   lines={player.lines}
@@ -236,19 +226,17 @@ const GameRoom = () => {
                 {playersContext.playerCount > 1 && <AttackQueue count={player.attackQueue} />}
 
                 {players.length > 2 && player.isAlive && (
-                  <div style={{
-                    padding: '10px',
-                    backgroundColor: '#000c5bff',
-                    border: '1px dashed #ffffff',
-                    color: '#fff',
-                    textAlign: 'center',
-                  }}>
+                  <div className={`${styles.attackTarget} ${!canChangeTarget(players, player.id) ? styles.locked : ''}`}>
                     Цель атаки: {players[player.attackTarget]?.name}
+                    {!canChangeTarget(players, player.id) && ' (заблокировано)'}
                   </div>
                 )}
               </div>
 
-              <GameOverModal isOpen={showGameOver} playerName={player.name} />
+              <GameOverModal
+                isOpen={shouldShowModal}
+                playerNames={deadPlayerNames}
+              />
             </div>
           )
         })}

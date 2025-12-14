@@ -5,8 +5,13 @@
   width: fit-content;
   margin: 0 auto;
 }
+
 .cell {
   width: 15px;
   height: 15px;
   box-sizing: border-box;
+}
+
+.cellFilled {
+  border: 1px solid #fff;
 }

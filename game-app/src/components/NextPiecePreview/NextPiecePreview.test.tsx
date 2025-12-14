@@ -20,11 +20,11 @@ describe('NextPiecePreview', () => {
 
   it('renders when nextPiece is provided', () => {
     render(<NextPiecePreview nextPiece={mockTetromino} />)
-    expect(screen.getByText('Next:')).toBeInTheDocument()
+    expect(screen.getByText('Следующая фигура:')).toBeInTheDocument()
   })
 
   it('displays NextTetromino component with correct tetromino', () => {
     render(<NextPiecePreview nextPiece={mockTetromino} />)
-    expect(screen.getByText('Next:')).toBeInTheDocument()
+    expect(screen.getByText('Следующая фигура:')).toBeInTheDocument()
   })
 })

@@ -23,7 +23,7 @@ describe('Grid', () => {
         <div>Child 1</div>
       </Grid>
     )
-    const grid = container.querySelector('.grid')
+    const grid = container.firstChild as HTMLElement
 
     expect(grid).toHaveStyle({ gridTemplateColumns: 'repeat(2, 1fr)' })
   })
@@ -34,7 +34,7 @@ describe('Grid', () => {
         <div>Child 1</div>
       </Grid>
     )
-    const grid = container.querySelector('.grid')
+    const grid = container.firstChild as HTMLElement
 
     expect(grid).toHaveStyle({ gridTemplateColumns: 'repeat(3, 1fr)' })
   })
@@ -45,7 +45,7 @@ describe('Grid', () => {
         <div>Single Child</div>
       </Grid>
     )
-    const grid = container.querySelector('.grid')
+    const grid = container.firstChild as HTMLElement
 
     expect(grid).toHaveStyle({ gridTemplateColumns: 'repeat(1, 1fr)' })
   })

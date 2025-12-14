@@ -3,6 +3,7 @@ import { useState, useContext } from 'react'
 import { Button } from '@my-app/ui-kit'
 import { useNavigate } from 'react-router-dom'
 
+import styles from './Lobby.module.css'
 import { GameContext } from '../../context/GameContext'
 import { PlayersContext } from '../../context/PlayersContext'
 
@@ -13,12 +14,12 @@ const Lobby = () => {
   const [names, setNames] = useState<string[]>(['Неопознанный 1', 'Неопазнанный 2', 'Неопознанный 3'])
 
   if (!playersContext || !gameContext) {
-    return <div>Loading...</div>
+    return <div>Загрузка...</div>
   }
 
   const handleStartGame = () => {
     const playerNames = Array.from({ length: playersContext.playerCount }, (_, i) =>
-      names[i] || `Player ${i + 1}`
+      names[i] || `Игрок ${i + 1}`
     )
 
     // Передаём имена в startGame, который сам инициализирует игроков
@@ -27,18 +28,18 @@ const Lobby = () => {
   }
 
   return (
-    <div style={{ padding: '10px', maxWidth: '800px', margin: '0 auto', fontSize: '14px' }}>
-      <h1 style={{ marginBottom: '20px', textAlign: 'center', fontSize: '28px' }}>МУЛЬТИПЛЕЕРНЫЙ ТЕТРИС</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>МУЛЬТИПЛЕЕРНЫЙ ТЕТРИС</h1>
 
-      <div style={{ marginBottom: '30px' }}>
-        <h2 style={{ marginBottom: '10px', textAlign: 'center' }}>Выберите количество игроков:</h2>
-        <div style={{ display: 'flex', gap: '30px', justifyContent: 'center' }}>
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Выберите количество игроков:</h2>
+        <div className={styles.buttonGroup}>
           {[1, 2, 3].map(count => (
             <Button
               key={count}
               onClick={() => playersContext.setPlayerCount(count)}
               variant={playersContext.playerCount === count ? 'primary' : 'secondary'}
-              style={{ fontSize: '26px' }}
+              className={styles.playerCountButton}
             >
               {count} игрок{count > 1 ? 'а' : ''}
             </Button>
@@ -46,10 +47,10 @@ const Lobby = () => {
         </div>
       </div>
 
-      <div style={{ marginBottom: '20px' }}>
-        <h2 style={{ marginBottom: '10px', textAlign: 'center',  }}>Введите имена игроков:</h2>
+      <div className={styles.playerNamesSection}>
+        <h2 className={styles.sectionTitle}>Введите имена игроков:</h2>
         {Array.from({ length: playersContext.playerCount }).map((_, i) => (
-          <div key={i} style={{ marginBottom: '10px' }}>
+          <div key={i} className={styles.inputWrapper}>
             <input
               type="text"
               value={names[i]}
@@ -60,22 +61,13 @@ const Lobby = () => {
                 setNames(newNames)
               }}
               placeholder={`Неопознанный ${i + 1}`}
-              style={{
-                width: '100%',
-                padding: '10px',
-                fontSize: '20px',
-                border: '3px dashed #051768',
-                borderRadius: '4px',
-                fontFamily: 'Comic Sans MS',
-                color: '#051768',
-                textAlign: 'center'
-              }}
+              className={styles.nameInput}
             />
           </div>
         ))}
       </div>
 
-      <Button onClick={handleStartGame} style={{ width: '100%', padding: '15px', fontSize: '40px' }}>
+      <Button onClick={handleStartGame} className={styles.startButton}>
         Начать игру
       </Button>
     </div>

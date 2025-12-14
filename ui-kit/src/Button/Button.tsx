@@ -1,37 +1,19 @@
 import React, { memo } from 'react'
 
+import styles from './Button.module.css'
+
 interface ButtonProps {
   onClick?: () => void
   children: React.ReactNode
   variant?: 'primary' | 'secondary'
-  style?: React.CSSProperties
+  className?: string
 }
 
-const Button = memo(({ onClick, children, variant = 'primary', style }: ButtonProps) => {
-  const baseStyle: React.CSSProperties = {
-    padding: '10px 20px',
-    fontSize: '16px',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontWeight: 'bold',
-    transition: 'background-color 0.2s',
-    fontFamily: 'Comic Sans MS',
-    ...style,
-  }
-
-  const variantStyle: React.CSSProperties = variant === 'primary'
-    ? {
-      backgroundColor: '#fe8605ff',
-      color: '#fff',
-    }
-    : {
-      backgroundColor: '#ffedc1ff',
-      color: '#ffffffff',
-    }
+const Button = memo(({ onClick, children, variant = 'primary', className }: ButtonProps) => {
+  const buttonClass = `${styles.button} ${styles[variant]} ${className || ''}`
 
   return (
-    <button onClick={onClick} style={{ ...baseStyle, ...variantStyle }}>
+    <button onClick={onClick} className={buttonClass}>
       {children}
     </button>
   )

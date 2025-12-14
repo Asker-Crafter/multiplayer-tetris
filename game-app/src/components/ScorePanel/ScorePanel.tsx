@@ -1,5 +1,7 @@
 import React, { memo } from 'react'
 
+import styles from './ScorePanel.module.css'
+
 interface ScorePanelProps {
   score: number
   lines: number
@@ -9,20 +11,16 @@ interface ScorePanelProps {
 
 const ScorePanel = memo(({ score, lines, level, playerName }: ScorePanelProps) => {
   return (
-    <div style={{
-      padding: '10px',
-      backgroundColor: '#000c5bff',
-      border: '1px dashed #ffffff',
-    }}>
-      <h4 style={{ margin: '0 0 5px 0', color: '#ffffff', textAlign: 'center' }}>{playerName}</h4>
-      <div style={{ color: '#ffffff', fontSize: '14px' }}>
-        <div style={{ marginBottom: '2px' }}>
+    <div className={styles.container}>
+      <h4 className={styles.playerName}>{playerName}</h4>
+      <div className={styles.stats}>
+        <div className={styles.stat}>
           <strong>Счёт:</strong> {score}
         </div>
-        <div style={{ marginBottom: '2px' }}>
+        <div className={styles.stat}>
           <strong>Уничтожено линий:</strong> {lines}
         </div>
-        <div>
+        <div className={styles.stat}>
           <strong>Уровень:</strong> {level}
         </div>
       </div>

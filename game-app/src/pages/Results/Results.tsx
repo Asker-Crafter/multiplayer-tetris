@@ -3,6 +3,7 @@ import { useContext } from 'react'
 import { Button, Scoreboard } from '@my-app/ui-kit'
 import { useNavigate } from 'react-router-dom'
 
+import styles from './Results.module.css'
 import { GameContext } from '../../context/GameContext'
 import { PlayersContext } from '../../context/PlayersContext'
 
@@ -12,7 +13,7 @@ const Results = () => {
   const gameContext = useContext(GameContext)
 
   if (!playersContext || !gameContext) {
-    return <div>Loading...</div>
+    return <div>Загрузка...</div>
   }
 
   const sortedPlayers = [...playersContext.players].sort((a, b) => {
@@ -29,17 +30,12 @@ const Results = () => {
   }
 
   return (
-    <div style={{ padding: '40px', maxWidth: '800px', margin: '0 auto' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>РЕЗУЛЬТАТЫ</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>РЕЗУЛЬТАТЫ</h1>
 
       {sortedPlayers.length > 0 && sortedPlayers[0].isAlive && (
-        <div style={{
-          textAlign: 'center',
-          marginBottom: '30px',
-          padding: '20px',
-          backgroundColor: '#e500a4',
-        }}>
-          <h2 style={{ margin: 0, color: '#fff', fontSize: '23px' }}>Победитель: {sortedPlayers[0].name}</h2>
+        <div className={styles.winnerBanner}>
+          <h2 className={styles.winnerText}>Победитель: {sortedPlayers[0].name}</h2>
         </div>
       )}
 
@@ -53,8 +49,8 @@ const Results = () => {
         }))}
       />
 
-      <div style={{ marginTop: '30px', display: 'flex', justifyContent: 'center', gap: '15px' }}>
-        <Button onClick={handlePlayAgain} style={{ padding: '15px 30px', fontSize: '18px' }}>
+      <div className={styles.buttonContainer}>
+        <Button onClick={handlePlayAgain} className={styles.playAgainButton}>
           Играть снова
         </Button>
       </div>
