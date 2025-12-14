@@ -26,7 +26,7 @@ const Button = memo(({ onClick, children, variant = 'primary', style }: ButtonPr
       color: '#fff',
     }
     : {
-      backgroundColor: '#fcffc1ff',
+      backgroundColor: '#ffedc1ff',
       color: '#ffffffff',
     }
 

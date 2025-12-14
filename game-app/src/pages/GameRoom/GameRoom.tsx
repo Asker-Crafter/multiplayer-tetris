@@ -46,7 +46,7 @@ const GameRoom = () => {
     if (!gameContext || !playersContext) return
 
     // Игнорируем повторные события при удержании клавиши для действий движения
-    const playerId = getPlayerForKey(event.key)
+    const playerId = getPlayerForKey(event.code)
 
     if (playerId === null) return
 
@@ -55,7 +55,7 @@ const GameRoom = () => {
 
     if (!player || !gameState || !player.isAlive || gameState.isGameOver) return
 
-    const action = getActionForKey(playerId, event.key)
+    const action = getActionForKey(playerId, event.code)
 
     if (!action) return
 
@@ -83,6 +83,7 @@ const GameRoom = () => {
       break
     case 'changeTarget':
       if (event.repeat) return
+
       if (players.length > 2) {
         const newTarget = getNextTarget(player.attackTarget, players.length, playerId)
 
@@ -111,6 +112,7 @@ const GameRoom = () => {
   useEffect(() => {
     if (!gameContext || !playersContext) {
       setIsReady(false)
+
       return
     }
 
@@ -119,6 +121,7 @@ const GameRoom = () => {
 
     if (isGameStarted && players.length > 0) {
       const allStatesExist = players.every(player => gameStates[player.id])
+
       setIsReady(allStatesExist)
     } else {
       setIsReady(false)
@@ -178,8 +181,8 @@ const GameRoom = () => {
   }
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>МУЛЬТИПЛЕЕРНЫЙ ТЕТРИС</h1>
+    <div>
+      <h2 style={{ textAlign: 'center' }}>МУЛЬТИПЛЕЕРНЫЙ ТЕТРИС</h2>
 
       <div style={{
         display: 'grid',
@@ -235,8 +238,8 @@ const GameRoom = () => {
                 {players.length > 2 && player.isAlive && (
                   <div style={{
                     padding: '10px',
-                    backgroundColor: '#4e0093ff',
-                    borderRadius: '4px',
+                    backgroundColor: '#000c5bff',
+                    border: '1px dashed #ffffff',
                     color: '#fff',
                     textAlign: 'center',
                   }}>

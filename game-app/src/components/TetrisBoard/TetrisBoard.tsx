@@ -6,7 +6,7 @@ import type { GameBoard } from '@my-app/ui-kit'
 
 interface TetrisBoardProps {
   board: GameBoard
-  currentPiece?: { shape: number[][]; color: string } | null
+  currentPiece?: { shape: number[][]; color: string; border: string } | null
   currentX?: number
   currentY?: number
 }

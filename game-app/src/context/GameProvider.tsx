@@ -13,15 +13,41 @@ import type { GameBoard } from '@my-app/ui-kit'
 
 const BOARD_HEIGHT = 20
 const BOARD_WIDTH = 10
+const STORAGE_KEY = 'tetris_game_state'
 
 const createEmptyBoard = (): GameBoard => {
   return Array.from({ length: BOARD_HEIGHT }, () => Array(BOARD_WIDTH).fill(0))
 }
 
+// Load state from localStorage
+const loadGameState = () => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY)
+
+    if (saved) {
+      return JSON.parse(saved)
+    }
+  } catch (error) {
+    console.error('Failed to load game state:', error)
+  }
+
+  return null
+}
+
+// Save state to localStorage
+const saveGameState = (gameStates: Record<number, PlayerGameState>, isGameStarted: boolean) => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ gameStates, isGameStarted }))
+  } catch (error) {
+    console.error('Failed to save game state:', error)
+  }
+}
+
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const playersContext = useContext(PlayersContext)
-  const [gameStates, setGameStates] = useState<Record<number, PlayerGameState>>({})
-  const [isGameStarted, setIsGameStarted] = useState(false)
+  const initialState = loadGameState()
+  const [gameStates, setGameStates] = useState<Record<number, PlayerGameState>>(initialState?.gameStates || {})
+  const [isGameStarted, setIsGameStarted] = useState(initialState?.isGameStarted || false)
 
   // Queue for storing side effects per player
   const lockPieceSideEffectsQueue = useRef<Map<number, {
@@ -57,6 +83,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const resetGame = useCallback(() => {
     setGameStates({})
     setIsGameStarted(false)
+    localStorage.removeItem(STORAGE_KEY)
   }, [])
 
   const updateGameState = useCallback((playerId: number, state: Partial<PlayerGameState>) => {
@@ -131,107 +158,112 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     if (!playersContext) return
 
     setGameStates(prev => {
-        const state = prev[playerId]
-        if (!state || !state.currentPiece) return prev
+      const state = prev[playerId]
 
-        // Размещаем фигуру на доске
-        const newBoard = state.board.map(row => [...row])
-        const piece = state.currentPiece
+      if (!state || !state.currentPiece) return prev
 
-        for (let row = 0; row < piece.shape.length; row++) {
-          for (let col = 0; col < piece.shape[row].length; col++) {
-            if (piece.shape[row][col] !== 0) {
-              const y = state.currentY + row
-              const x = state.currentX + col
+      // Размещаем фигуру на доске
+      const newBoard = state.board.map(row => [...row])
+      const piece = state.currentPiece
 
-              if (y >= 0 && y < BOARD_HEIGHT && x >= 0 && x < BOARD_WIDTH) {
-                newBoard[y][x] = piece.shape[row][col]
-              }
+      for (let row = 0; row < piece.shape.length; row++) {
+        for (let col = 0; col < piece.shape[row].length; col++) {
+          if (piece.shape[row][col] !== 0) {
+            const y = state.currentY + row
+            const x = state.currentX + col
+
+            if (y >= 0 && y < BOARD_HEIGHT && x >= 0 && x < BOARD_WIDTH) {
+              newBoard[y][x] = piece.shape[row][col]
+            }
+          }
+        }
+      }
+
+      // Очищаем линии
+      const { newBoard: clearedBoard, linesCleared } = clearLines(newBoard)
+
+      const player = playersContext.players.find(p => p.id === playerId)
+
+      if (!player) return prev
+
+      const newTotalLines = player.lines + linesCleared
+      const newLevel = calculateLevel(newTotalLines)
+      const newScore = player.score + calculateScore(linesCleared, player.level)
+
+      // 1. ЗАЩИТА - расчет отбитых линий (если есть входящие атаки)
+      let defendedLines = 0
+      let remainingGarbage = 0
+
+      if (player.attackQueue > 0) {
+        defendedLines = Math.min(linesCleared, player.attackQueue)
+        remainingGarbage = player.attackQueue - defendedLines
+      }
+
+      // 2. ОСТАТОК - линии после защиты
+      const remainingLines = linesCleared - defendedLines
+
+      // 3. АТАКА - генерация на основе остатка + проверка мультиплеера
+      const garbageGenerated = calculateGarbageLines(remainingLines)
+      let attackToSend: { targetId: number; count: number } | null = null
+
+      if (garbageGenerated > 0 && playersContext.playerCount > 1) {
+        let targetId = player.attackTarget
+
+        if (playersContext.playerCount === 2) {
+          const otherPlayer = playersContext.players.find(p => p.id !== playerId && p.isAlive)
+
+          if (otherPlayer) {
+            targetId = otherPlayer.id
+          }
+        } else {
+          const targetPlayer = playersContext.players.find(p => p.id === targetId)
+
+          if (!targetPlayer || !targetPlayer.isAlive) {
+            const aliveOpponent = playersContext.players.find(p => p.id !== playerId && p.isAlive)
+
+            if (aliveOpponent) {
+              targetId = aliveOpponent.id
             }
           }
         }
 
-        // Очищаем линии
-        const { newBoard: clearedBoard, linesCleared } = clearLines(newBoard)
+        attackToSend = { targetId, count: garbageGenerated }
+      }
 
-        const player = playersContext.players.find(p => p.id === playerId)
-        if (!player) return prev
+      // 4. СПАВН МУСОРА - оставшиеся входящие атаки
+      let finalBoard = clearedBoard
 
-        const newTotalLines = player.lines + linesCleared
-        const newLevel = calculateLevel(newTotalLines)
-        const newScore = player.score + calculateScore(linesCleared, player.level)
+      if (remainingGarbage > 0) {
+        finalBoard = addGarbageLines(clearedBoard, remainingGarbage)
+      }
 
-        // 1. ЗАЩИТА - расчет отбитых линий (если есть входящие атаки)
-        let defendedLines = 0
-        let remainingGarbage = 0
+      // 5. ОБНОВЛЕНИЕ СТАТИСТИКИ
+      const statsUpdate: { score: number; lines: number; level: number; attackQueue?: number } = {
+        score: newScore,
+        lines: newTotalLines,
+        level: newLevel,
+        ...(player.attackQueue > 0 && { attackQueue: 0 })
+      }
 
-        if (player.attackQueue > 0) {
-          defendedLines = Math.min(linesCleared, player.attackQueue)
-          remainingGarbage = player.attackQueue - defendedLines
-        }
+      const nextPiece = state.nextPiece || getRandomTetromino()
+      const newPiece = getRandomTetromino()
+      const isGameOver = checkCollision(finalBoard, nextPiece.shape, 3, 0)
 
-        // 2. ОСТАТОК - линии после защиты
-        const remainingLines = linesCleared - defendedLines
+      // Queue side effects for this specific player
+      lockPieceSideEffectsQueue.current.set(playerId, { attackToSend, statsUpdate, isGameOver })
 
-        // 3. АТАКА - генерация на основе остатка + проверка мультиплеера
-        const garbageGenerated = calculateGarbageLines(remainingLines)
-        let attackToSend: { targetId: number; count: number } | null = null
-
-        if (garbageGenerated > 0 && playersContext.playerCount > 1) {
-          let targetId = player.attackTarget
-
-          if (playersContext.playerCount === 2) {
-            const otherPlayer = playersContext.players.find(p => p.id !== playerId && p.isAlive)
-            if (otherPlayer) {
-              targetId = otherPlayer.id
-            }
-          } else {
-            const targetPlayer = playersContext.players.find(p => p.id === targetId)
-            if (!targetPlayer || !targetPlayer.isAlive) {
-              const aliveOpponent = playersContext.players.find(p => p.id !== playerId && p.isAlive)
-              if (aliveOpponent) {
-                targetId = aliveOpponent.id
-              }
-            }
-          }
-
-          attackToSend = { targetId, count: garbageGenerated }
-        }
-
-        // 4. СПАВН МУСОРА - оставшиеся входящие атаки
-        let finalBoard = clearedBoard
-
-        if (remainingGarbage > 0) {
-          finalBoard = addGarbageLines(clearedBoard, remainingGarbage)
-        }
-
-        // 5. ОБНОВЛЕНИЕ СТАТИСТИКИ
-        const statsUpdate: { score: number; lines: number; level: number; attackQueue?: number } = {
-          score: newScore,
-          lines: newTotalLines,
-          level: newLevel,
-          ...(player.attackQueue > 0 && { attackQueue: 0 })
-        }
-
-        const nextPiece = state.nextPiece || getRandomTetromino()
-        const newPiece = getRandomTetromino()
-        const isGameOver = checkCollision(finalBoard, nextPiece.shape, 3, 0)
-
-        // Queue side effects for this specific player
-        lockPieceSideEffectsQueue.current.set(playerId, { attackToSend, statsUpdate, isGameOver })
-
-        return {
-          ...prev,
-          [playerId]: {
-            board: finalBoard,
-            currentPiece: nextPiece,
-            currentX: 3,
-            currentY: 0,
-            nextPiece: newPiece,
-            isGameOver,
-          },
-        }
-      })
+      return {
+        ...prev,
+        [playerId]: {
+          board: finalBoard,
+          currentPiece: nextPiece,
+          currentX: 3,
+          currentY: 0,
+          nextPiece: newPiece,
+          isGameOver,
+        },
+      }
+    })
   }, [playersContext])
 
   // Process side effects queue after state updates
@@ -247,6 +279,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
         )
       }
       playersContext?.updatePlayerStats(playerId, sideEffects.statsUpdate)
+
       if (sideEffects.isGameOver) {
         playersContext?.setPlayerAlive(playerId, false)
       }
@@ -255,6 +288,13 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     // Clear the queue
     lockPieceSideEffectsQueue.current.clear()
   }, [gameStates, playersContext])
+
+  // Auto-save game state to localStorage whenever it changes
+  useEffect(() => {
+    if (isGameStarted && Object.keys(gameStates).length > 0) {
+      saveGameState(gameStates, isGameStarted)
+    }
+  }, [gameStates, isGameStarted])
 
   return (
     <GameContext.Provider

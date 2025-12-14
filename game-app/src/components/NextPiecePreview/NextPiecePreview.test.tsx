@@ -8,7 +8,8 @@ import NextPiecePreview from './NextPiecePreview'
 describe('NextPiecePreview', () => {
   const mockTetromino = {
     shape: [[1, 1], [1, 1]],
-    color: '#ffff00'
+    color: '#ffff00',
+    border: '1px dashed #ffffff'
   }
 
   it('does not render when nextPiece is null', () => {

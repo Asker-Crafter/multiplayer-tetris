@@ -1,16 +1,14 @@
 .previewBox {
   display: grid;
-  grid-template-columns: repeat(5, 20px);
-  grid-template-rows: repeat(5, 20px);
-  width: 100px;
-  height: 100px;
+  grid-template-columns: repeat(5, 15px);
+  grid-template-rows: repeat(5, 15px);
   background-color: #1a1a1a;
-  border: 2px solid #555;
+  border: 1px dashed #ffffff;
   padding: 5px;
 }
 .cell {
-  width: 20px;
-  height: 20px;
-  border: 1px solid #333;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #ffffff;
   box-sizing: border-box;
 }

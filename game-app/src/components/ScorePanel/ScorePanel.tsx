@@ -12,19 +12,18 @@ const ScorePanel = memo(({ score, lines, level, playerName }: ScorePanelProps) =
     <div style={{
       padding: '10px',
       backgroundColor: '#000c5bff',
-      border: '5px dashed #ffffffff',
-      borderRadius: '7px',
+      border: '1px dashed #ffffff',
     }}>
-      <h3 style={{ margin: '0 0 5px 0', color: '#00d9ffff' }}>{playerName}</h3>
-      <div style={{ color: '#fff', fontSize: '15px' }}>
-        <div style={{ marginBottom: '8px' }}>
-          <strong>Score:</strong> {score}
+      <h4 style={{ margin: '0 0 5px 0', color: '#ffffff', textAlign: 'center' }}>{playerName}</h4>
+      <div style={{ color: '#ffffff', fontSize: '14px' }}>
+        <div style={{ marginBottom: '2px' }}>
+          <strong>Счёт:</strong> {score}
         </div>
-        <div style={{ marginBottom: '8px' }}>
-          <strong>Lines:</strong> {lines}
+        <div style={{ marginBottom: '2px' }}>
+          <strong>Уничтожено линий:</strong> {lines}
         </div>
         <div>
-          <strong>Level:</strong> {level}
+          <strong>Уровень:</strong> {level}
         </div>
       </div>
     </div>

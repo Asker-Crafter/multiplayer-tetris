@@ -14,12 +14,11 @@ const NextPiecePreview = memo(({ nextPiece }: NextPiecePreviewProps) => {
   return (
     <div style={{
       padding: '15px',
-      backgroundColor: '#1a1a1a',
-      border: '2px solid #333',
-      borderRadius: '8px',
+      backgroundColor: '#001076ff',
+      border: '1px dashed #ffffff',
     }}>
-      <h4 style={{ margin: '0 0 10px 0', color: '#fff' }}>Next:</h4>
-      <NextTetromino tetromino={nextPiece} />
+      <h4 style={{ margin: '0 0 10px 0', color: '#ffffff', textAlign: 'center' }}>Следующая фигура:</h4>
+      <div style={{ justifyContent: 'center', display: 'flex' }}><NextTetromino tetromino={nextPiece} /></div>
     </div>
   )
 })

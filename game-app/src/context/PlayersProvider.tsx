@@ -1,12 +1,39 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 
 import { PlayersContext } from './PlayersContext'
 
 import type { Player } from './PlayersContext'
 
+const STORAGE_KEY = 'tetris_players_state'
+
+// Load state from localStorage
+const loadState = () => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY)
+
+    if (saved) {
+      return JSON.parse(saved)
+    }
+  } catch (error) {
+    console.error('Failed to load players state:', error)
+  }
+
+  return null
+}
+
+// Save state to localStorage
+const saveState = (players: Player[], playerCount: number) => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ players, playerCount }))
+  } catch (error) {
+    console.error('Failed to save players state:', error)
+  }
+}
+
 export const PlayersProvider = ({ children }: { children: React.ReactNode }) => {
-  const [players, setPlayers] = useState<Player[]>([])
-  const [playerCount, setPlayerCount] = useState(1)
+  const initialState = loadState()
+  const [players, setPlayers] = useState<Player[]>(initialState?.players || [])
+  const [playerCount, setPlayerCount] = useState(initialState?.playerCount || 1)
 
   const setPlayerName = useCallback((id: number, name: string) => {
     setPlayers(prev => prev.map(p => p.id === id ? { ...p, name } : p))
@@ -42,7 +69,9 @@ export const PlayersProvider = ({ children }: { children: React.ReactNode }) => 
         p.id === targetId ? { ...p, attackQueue: p.attackQueue + count } : p
       )
       const target = updated.find(p => p.id === targetId)
+
       console.log(`Player ${targetId} attackQueue is now: ${target?.attackQueue}`)
+
       return updated
     })
   }, [])
@@ -71,7 +100,15 @@ export const PlayersProvider = ({ children }: { children: React.ReactNode }) => 
   const resetPlayers = useCallback(() => {
     setPlayers([])
     setPlayerCount(1)
+    localStorage.removeItem(STORAGE_KEY)
   }, [])
+
+  // Auto-save state to localStorage whenever it changes
+  useEffect(() => {
+    if (players.length > 0) {
+      saveState(players, playerCount)
+    }
+  }, [players, playerCount])
 
   return (
     <PlayersContext.Provider

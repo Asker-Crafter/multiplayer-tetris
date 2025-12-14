@@ -15,29 +15,26 @@ interface ScoreboardProps {
 const Scoreboard = ({ players }: ScoreboardProps) => {
   return (
     <div style={{
-      backgroundColor: '#1a1a1a',
-      border: '2px solid #333',
-      borderRadius: '8px',
-      padding: '20px',
+      backgroundColor: '#40208bff',
     }}>
-      <table style={{ width: '100%', color: '#fff', borderCollapse: 'collapse' }}>
+      <table style={{ width: '100%', color: '#fff', borderCollapse: 'collapse', textAlign: 'center', border: '2px solid #ffffff' }}>
         <thead>
-          <tr style={{ borderBottom: '2px solid #333' }}>
-            <th style={{ padding: '10px', textAlign: 'left' }}>Place</th>
-            <th style={{ padding: '10px', textAlign: 'left' }}>Name</th>
-            <th style={{ padding: '10px', textAlign: 'right' }}>Score</th>
-            <th style={{ padding: '10px', textAlign: 'right' }}>Lines</th>
-            <th style={{ padding: '10px', textAlign: 'right' }}>Level</th>
+          <tr style={{ borderBottom: '2px solid #ffffff' }}>
+            <th style={{ padding: '10px', border: '2px solid #ffffff' }}>Место</th>
+            <th style={{ padding: '10px', border: '2px solid #ffffff' }}>Счёт</th>
+            <th style={{ padding: '10px', border: '2px solid #ffffff' }}>Уничтожено линий</th>
+            <th style={{ padding: '10px', border: '2px solid #ffffff' }}>Имя</th>
+            <th style={{ padding: '10px', border: '2px solid #ffffff' }}>Уровень</th>
           </tr>
         </thead>
         <tbody>
           {players.map((player) => (
-            <tr key={player.place} style={{ borderBottom: '1px solid #333' }}>
-              <td style={{ padding: '10px' }}>{player.place}</td>
-              <td style={{ padding: '10px' }}>{player.name}</td>
-              <td style={{ padding: '10px', textAlign: 'right' }}>{player.score}</td>
-              <td style={{ padding: '10px', textAlign: 'right' }}>{player.lines}</td>
-              <td style={{ padding: '10px', textAlign: 'right' }}>{player.level}</td>
+            <tr key={player.place} style={{ borderBottom: '1px solid #ffffff' }}>
+              <td style={{ padding: '20px', border: '1px solid #ffffff' }}>{player.place}</td>
+              <td style={{ padding: '20px', border: '1px solid #ffffff' }}>{player.name}</td>
+              <td style={{ padding: '20px', border: '1px solid #ffffff' }}>{player.score}</td>
+              <td style={{ padding: '20px', border: '1px solid #ffffff' }}>{player.lines}</td>
+              <td style={{ padding: '20px', border: '1px solid #ffffff' }}>{player.level}</td>
             </tr>
           ))}
         </tbody>

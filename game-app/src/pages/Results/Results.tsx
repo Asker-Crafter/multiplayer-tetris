@@ -30,17 +30,16 @@ const Results = () => {
 
   return (
     <div style={{ padding: '40px', maxWidth: '800px', margin: '0 auto' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Game Results</h1>
+      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>РЕЗУЛЬТАТЫ</h1>
 
       {sortedPlayers.length > 0 && sortedPlayers[0].isAlive && (
         <div style={{
           textAlign: 'center',
           marginBottom: '30px',
           padding: '20px',
-          backgroundColor: '#22c55e',
-          borderRadius: '8px',
+          backgroundColor: '#e500a4',
         }}>
-          <h2 style={{ margin: 0, color: '#fff' }}>Winner: {sortedPlayers[0].name}</h2>
+          <h2 style={{ margin: 0, color: '#fff', fontSize: '23px' }}>Победитель: {sortedPlayers[0].name}</h2>
         </div>
       )}
 
@@ -56,7 +55,7 @@ const Results = () => {
 
       <div style={{ marginTop: '30px', display: 'flex', justifyContent: 'center', gap: '15px' }}>
         <Button onClick={handlePlayAgain} style={{ padding: '15px 30px', fontSize: '18px' }}>
-          Play Again
+          Играть снова
         </Button>
       </div>
     </div>
