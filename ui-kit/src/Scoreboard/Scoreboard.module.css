@@ -1,0 +1,29 @@
+.container {
+  background-color: #40208bff;
+}
+
+.table {
+  width: 100%;
+  color: #fff;
+  border-collapse: collapse;
+  text-align: center;
+  border: 2px solid #ffffff;
+}
+
+.headerRow {
+  border-bottom: 2px solid #ffffff;
+}
+
+.headerCell {
+  padding: 10px;
+  border: 2px solid #ffffff;
+}
+
+.bodyRow {
+  border-bottom: 1px solid #ffffff;
+}
+
+.cell {
+  padding: 20px;
+  border: 1px solid #ffffff;
+}

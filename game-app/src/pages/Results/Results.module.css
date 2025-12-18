@@ -1,0 +1,35 @@
+.container {
+  padding: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.winnerBanner {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #e500a4;
+}
+
+.winnerText {
+  margin: 0;
+  color: #fff;
+  font-size: 23px;
+}
+
+.buttonContainer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.playAgainButton {
+  padding: 15px 30px;
+  font-size: 18px;
+}

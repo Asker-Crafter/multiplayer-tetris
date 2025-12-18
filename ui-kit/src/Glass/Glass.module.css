@@ -1,12 +1,18 @@
 .glassGrid {
   display: grid;
-  border: 2px solid #555;
+  border: 1px dashed #ffffff;
   background-color: #1a1a1a;
   width: fit-content;
+  margin: 0 auto;
 }
+
 .cell {
-  width: 25px;
-  height: 25px;
-  border: 1px solid #333;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #2e2e2e;
   box-sizing: border-box;
+}
+
+.cellFilled {
+  border: 1px solid #fff;
 }

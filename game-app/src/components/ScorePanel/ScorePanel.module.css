@@ -1,0 +1,24 @@
+.container {
+  padding: 10px;
+  background-color: #000c5bff;
+  border: 1px dashed #ffffff;
+}
+
+.playerName {
+  margin: 0 0 5px 0;
+  color: #ffffff;
+  text-align: center;
+}
+
+.stats {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.stat {
+  margin-bottom: 2px;
+}
+
+.stat:last-child {
+  margin-bottom: 0;
+}

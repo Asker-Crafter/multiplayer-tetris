@@ -17,7 +17,17 @@ const config = {
   coveragePathIgnorePatterns: ['/node_modules/', '/coverage'],
   // Optional: collect coverage information
   collectCoverage: false,
-  collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.d.ts', '!src/main.tsx'],
+  collectCoverageFrom: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.d.ts',
+    '!src/**/*.test.{ts,tsx}',
+    '!src/main.tsx',
+    '!src/**/index.ts',
+    '!src/**/index.tsx',
+    '!src/setupTests.ts',
+    '!src/pages/**',
+    '!src/context/**Provider.tsx',
+  ],
   coverageDirectory: 'coverage',
 }
 

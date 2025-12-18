@@ -1,3 +1,7 @@
+import React from 'react'
+
+import styles from './Grid.module.css'
+
 interface GridProps {
   children: React.ReactNode
   columns?: number
@@ -5,7 +9,7 @@ interface GridProps {
 
 const Grid = ({ children, columns = 2 }: GridProps) => {
   return (
-    <div className="grid" style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
+    <div className={styles.grid} style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
       {children}
     </div>
   )

@@ -5,4 +5,5 @@ export type GameBoard = Cell[][]
 export interface Tetromino {
   shape: number[][]
   color: string
+  border: string
 }
