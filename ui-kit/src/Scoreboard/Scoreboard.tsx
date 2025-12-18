@@ -21,9 +21,9 @@ const Scoreboard = ({ players }: ScoreboardProps) => {
         <thead>
           <tr className={styles.headerRow}>
             <th className={styles.headerCell}>Место</th>
+            <th className={styles.headerCell}>Имя</th>
             <th className={styles.headerCell}>Счёт</th>
             <th className={styles.headerCell}>Уничтожено линий</th>
-            <th className={styles.headerCell}>Имя</th>
             <th className={styles.headerCell}>Уровень</th>
           </tr>
         </thead>
