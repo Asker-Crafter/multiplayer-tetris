@@ -20,12 +20,15 @@ game-app/
 │   │   └── Results/
 │   ├── context/
 │   │   ├── GameContext.tsx
-│   │   └── PlayersContext.tsx
+│   │   ├── PlayersContext.tsx
+│   │   ├── GameProvider.tsx
+│   │   └── PlayersProvider.tsx
 │   ├── engine/
 │   │   ├── tetrominos.ts
 │   │   ├── collision.ts
 │   │   ├── rotation.ts
-│   │   └── scoring.ts
+│   │   ├── scoring.ts
+│   │   └── tetrominos.test.ts
 │   ├── multiplayer/
 │   │   ├── attackSystem.ts
 │   │   └── targetSelection.ts
@@ -35,8 +38,8 @@ game-app/
 │   ├── App.test.tsx
 │   ├── App.css
 │   ├── index.css
-│   └── main.tsx
-├── .gitignore
+│   ├── main.tsx
+│   └── setupTests.ts
 ├── eslint.config.js
 ├── index.html
 ├── jest.config.ts
@@ -47,15 +50,21 @@ game-app/
 ### второй - ui-kit - библиотека UI-компонентов
 ```
 ui-kit/
+├── public/
+│   └── vite.svg
 ├── src/
 │   ├── Button/
 │   ├── Modal/
 │   ├── PlayerCard/
 │   ├── Grid/
 │   ├── Scoreboard/
+│   ├── Glass/
+│   ├── NextTetromino/
+│   ├── global.d.ts
+│   ├── setupTests.ts
+│   ├── types.ts
 │   └── index.ts
 ├── package.json
-├── .gitignore
 ├── eslint.config.js
 ├── jest.config.ts
 ├── vite.config.ts
@@ -65,15 +74,15 @@ ui-kit/
 <center><h2> === Технологический стек === </h2></center>
 
 ### runtime зависимости
-- react ^19.0.0 - UI библиотека
-- react-dom ^19.0.0 - рендеринг React
-- react-router-dom ^7.1.1 - маршрутизация
+- react ^19.2.1 - UI библиотека
+- react-dom ^19.2.1 - Рендеринг React
+- react-router-dom ^7.10.1 - Маршрутизация
 
 ### dev зависимости
-- typescript ~5.6.2 - статическая типизация
-- vite ^6.0.5 - сборщик и dev-сервер
-- eslint ^9.17.0 - линтинг кода
-- jest ^29.7.0 - тестирование
+- typescript ~5.9.3 - Статическая типизация
+- vite ^7.2.6 - Сборщик и dev-сервер
+- eslint ^9.39.1 - Линтинг кода
+- jest ^30.2.0 - Тестирование
 
 
 <center><h2> === Компоненты === </h2></center>

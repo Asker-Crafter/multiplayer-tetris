@@ -1,0 +1,12 @@
+.glassGrid {
+  display: grid;
+  border: 2px solid #555;
+  background-color: #1a1a1a;
+  width: fit-content;
+}
+.cell {
+  width: 25px;
+  height: 25px;
+  border: 1px solid #333;
+  box-sizing: border-box;
+}
